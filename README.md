@@ -28,6 +28,16 @@ calibrated probability and would rather not run ML infrastructure.
 **Not a fit:** fully offline/air-gapped environments, or when you need to own and
 retrain the model yourself — Siftfy is a hosted API.
 
+```python
+from siftfy import Siftfy
+
+client = Siftfy(api_key="sk_live_...")
+result = client.predict("Win a free iPad — click here!")
+
+result.spam_probability  # 0.97
+result.likelihood        # "high"
+```
+
 ## Requirements
 
 Siftfy supports Python 3.9 and newer.
@@ -52,6 +62,27 @@ print(result.likelihood)        # "high"
 
 Get an API key at [siftfy.io](https://siftfy.io) — the free tier covers
 10,000 requests/month at no cost.
+
+## In a request handler
+
+What it looks like wired into a real endpoint — reject the submission when the
+score crosses your threshold, accept it otherwise:
+
+```python
+from fastapi import FastAPI, HTTPException
+from siftfy import Siftfy
+
+app = FastAPI()
+siftfy = Siftfy(api_key="sk_live_...")
+
+@app.post("/contact")
+def contact(message: str):
+    result = siftfy.predict(message)
+    if result.spam_probability > 0.8:
+        raise HTTPException(status_code=422, detail="Message flagged as spam")
+    # ... persist / notify / queue the legitimate message
+    return {"ok": True}
+```
 
 ## Runnable examples
 

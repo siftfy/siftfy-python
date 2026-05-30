@@ -9,6 +9,25 @@ queues, no models to host.
 [![CI](https://github.com/siftfy/siftfy-python/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/siftfy/siftfy-python/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+`siftfy` is a small, typed client built for Python developers who need to keep
+spam out of contact forms, signups, comments, reviews, and moderation queues —
+the everyday content-moderation use case — without training, tuning, or hosting
+a model. Add a few lines and call `predict()`; it lets you branch on a single
+score so you can block or flag spam before it lands.
+
+### At a glance
+
+- **In:** a string of text. **Out:** a calibrated `spam_probability` (0–1) plus a
+  coarse `"low" | "medium" | "high"` bucket.
+- Sync (`Siftfy`) and async (`AsyncSiftfy`) clients, fully type-hinted (ships `py.typed`).
+- Automatic retries with backoff on transient failures; typed exceptions for the rest.
+- One dependency (`httpx`), Python 3.9+. Free tier: 10,000 requests/month.
+
+**Good fit:** real-time spam scoring of user-submitted text when you want a hosted,
+calibrated probability and would rather not run ML infrastructure.
+**Not a fit:** fully offline/air-gapped environments, or when you need to own and
+retrain the model yourself — Siftfy is a hosted API.
+
 ## Requirements
 
 Siftfy supports Python 3.9 and newer.
